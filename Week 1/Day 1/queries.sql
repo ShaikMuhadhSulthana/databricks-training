@@ -1,67 +1,230 @@
-
--- Create Department table
-CREATE TABLE Department (
-    department_id INT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
-);
-
--- Create Employee table
-CREATE TABLE Employee (
-    emp_id INT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    age INT,
-    salary DECIMAL(10, 2),
-    department_id INT,
-    hire_date DATE,
-    FOREIGN KEY (department_id) REFERENCES Department(department_id)
-);
-
--- Create Project table
-CREATE TABLE Project (
-    project_id INT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    department_id INT,
-    FOREIGN KEY (department_id) REFERENCES Department(department_id)
-);
-
--- Insert data into Department table
-INSERT INTO Department (department_id, name) VALUES
-(1, 'IT'),
-(2, 'HR'),
-(3, 'Finance'),
-(4, 'Marketing');
-
--- Insert data into Employee table
-INSERT INTO Employee (emp_id, name, age, salary, department_id, hire_date) VALUES
-(1, 'John Doe', 28, 50000.00, 1, '2020-01-15'),
-(2, 'Jane Smith', 34, 60000.00, 2, '2019-07-23'),
-(3, 'Bob Brown', 45, 80000.00, 1, '2018-02-12'),
-(4, 'Alice Blue', 25, 45000.00, 3, '2021-03-22'),
-(5, 'Charlie P.', 29, 50000.00, 2, '2019-12-01'),
-(6, 'David Green', 38, 70000.00, 4, '2022-05-18'),
-(7, 'Eve Black', 40, 55000.00, 3, '2021-08-30');
-
--- Insert data into Project table
-INSERT INTO Project (project_id, name, department_id) VALUES
-(1, 'Project Alpha', 1),
-(2, 'Project Beta', 2),
-(3, 'Project Gamma', 1),
-(4, 'Project Delta', 3),
-(5, 'Project Epsilon', 4),
-(6, 'Project Zeta', 4),
-(7, 'Project Eta', 3);
+-- =====================================================
+WEEK 1 - DAY 1 SQL PRACTICE
+-- =====================================================
 
 
--- Insert additional data into Department table (if needed)
--- No additional departments needed for this data set
+-- =====================================================
+-- QUESTION 1: Get all employees
+-- =====================================================
+SELECT * FROM Employee;
 
--- Insert additional data into Employee table to test edge cases for joins and nested queries
-INSERT INTO Employee (emp_id, name, age, salary, department_id, hire_date) VALUES
-(8, 'Frank White', 32, 48000.00, NULL, '2021-07-10'),  -- Employee without a department
-(9, 'Grace Kelly', 27, 65000.00, 1, '2018-11-13'),
-(10, 'Hannah Lee', 30, 53000.00, 4, '2020-02-25');
 
--- Insert additional data into Project table to test edge cases for joins
-INSERT INTO Project (project_id, name, department_id) VALUES
-(8, 'Project Theta', 1),
-(9, 'Project Iota', NULL);  -- Project without a department
+-- =====================================================
+-- QUESTION 2: Get all departments
+-- =====================================================
+SELECT * FROM Department;
+
+
+-- =====================================================
+-- QUESTION 3: Get employees with salary > 50000
+-- =====================================================
+SELECT * FROM Employee
+WHERE salary > 50000;
+
+
+-- =====================================================
+-- QUESTION 4: Get employees from IT department
+-- =====================================================
+SELECT * FROM Employee
+WHERE department_id = 1;
+
+
+-- =====================================================
+-- QUESTION 5: Get employee names and salaries
+-- =====================================================
+SELECT name, salary FROM Employee;
+
+
+-- =====================================================
+-- QUESTION 6: Count total employees
+-- =====================================================
+SELECT COUNT(*) FROM Employee;
+
+
+-- =====================================================
+-- QUESTION 7: Find average salary
+-- =====================================================
+SELECT AVG(salary) FROM Employee;
+
+
+-- =====================================================
+-- QUESTION 8: Find maximum salary
+-- =====================================================
+SELECT MAX(salary) FROM Employee;
+
+
+-- =====================================================
+-- QUESTION 9: Find minimum salary
+-- =====================================================
+SELECT MIN(salary) FROM Employee;
+
+
+-- =====================================================
+-- QUESTION 10: Get employees sorted by salary (descending)
+-- =====================================================
+SELECT * FROM Employee
+ORDER BY salary DESC;
+
+
+-- =====================================================
+-- QUESTION 11: Get employees hired after 2020
+-- =====================================================
+SELECT * FROM Employee
+WHERE hire_date > '2020-01-01';
+
+
+-- =====================================================
+-- QUESTION 12: Get employees with NULL department
+-- =====================================================
+SELECT * FROM Employee
+WHERE department_id IS NULL;
+
+
+-- =====================================================
+-- QUESTION 13: Inner Join Employee & Department
+-- =====================================================
+SELECT e.name, d.name AS department
+FROM Employee e
+INNER JOIN Department d
+ON e.department_id = d.department_id;
+
+
+-- =====================================================
+-- QUESTION 14: Left Join (all employees)
+-- =====================================================
+SELECT e.name, d.name AS department
+FROM Employee e
+LEFT JOIN Department d
+ON e.department_id = d.department_id;
+
+
+-- =====================================================
+-- QUESTION 15: Right Join (all departments)
+-- =====================================================
+SELECT e.name, d.name AS department
+FROM Employee e
+RIGHT JOIN Department d
+ON e.department_id = d.department_id;
+
+
+-- =====================================================
+-- QUESTION 16: Count employees per department
+-- =====================================================
+SELECT department_id, COUNT(*) AS total_employees
+FROM Employee
+GROUP BY department_id;
+
+
+-- =====================================================
+-- QUESTION 17: Departments with more than 2 employees
+-- =====================================================
+SELECT department_id, COUNT(*) AS total_employees
+FROM Employee
+GROUP BY department_id
+HAVING COUNT(*) > 2;
+
+
+-- =====================================================
+-- QUESTION 18: Get projects with department names
+-- =====================================================
+SELECT p.name AS project_name, d.name AS department_name
+FROM Project p
+JOIN Department d
+ON p.department_id = d.department_id;
+
+
+-- =====================================================
+-- QUESTION 19: Employees working in departments with projects
+-- =====================================================
+SELECT DISTINCT e.name
+FROM Employee e
+JOIN Project p
+ON e.department_id = p.department_id;
+
+
+-- =====================================================
+-- QUESTION 20: Get employees with highest salary
+-- =====================================================
+SELECT * FROM Employee
+WHERE salary = (SELECT MAX(salary) FROM Employee);
+
+
+-- =====================================================
+-- QUESTION 21: Get employees with salary above average
+-- =====================================================
+SELECT * FROM Employee
+WHERE salary > (SELECT AVG(salary) FROM Employee);
+
+
+-- =====================================================
+-- QUESTION 22: Department-wise average salary
+-- =====================================================
+SELECT department_id, AVG(salary) AS avg_salary
+FROM Employee
+GROUP BY department_id;
+
+
+-- =====================================================
+-- QUESTION 23: Employees whose name starts with 'J'
+-- =====================================================
+SELECT * FROM Employee
+WHERE name LIKE 'J%';
+
+
+-- =====================================================
+-- QUESTION 24: Employees between age 25 and 35
+-- =====================================================
+SELECT * FROM Employee
+WHERE age BETWEEN 25 AND 35;
+
+
+-- =====================================================
+-- QUESTION 25: Count projects per department
+-- =====================================================
+SELECT department_id, COUNT(*) AS total_projects
+FROM Project
+GROUP BY department_id;
+
+
+-- =====================================================
+-- QUESTION 26: Employees not assigned to any department
+-- =====================================================
+SELECT * FROM Employee
+WHERE department_id IS NULL;
+
+
+-- =====================================================
+-- QUESTION 27: Departments without employees
+-- =====================================================
+SELECT d.*
+FROM Department d
+LEFT JOIN Employee e
+ON d.department_id = e.department_id
+WHERE e.emp_id IS NULL;
+
+
+-- =====================================================
+-- QUESTION 28: Employees working in HR department
+-- =====================================================
+SELECT e.*
+FROM Employee e
+JOIN Department d
+ON e.department_id = d.department_id
+WHERE d.name = 'HR';
+
+
+-- =====================================================
+-- QUESTION 29: Projects without department
+-- =====================================================
+SELECT * FROM Project
+WHERE department_id IS NULL;
+
+
+-- =====================================================
+-- QUESTION 30: Employee count and average salary per department
+-- =====================================================
+SELECT department_id,
+       COUNT(*) AS total_employees,
+       AVG(salary) AS avg_salary
+FROM Employee
+GROUP BY department_id;
